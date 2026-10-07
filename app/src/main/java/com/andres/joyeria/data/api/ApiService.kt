@@ -1,4 +1,5 @@
 package com.andres.joyeria.data.api
+import com.andres.joyeria.ui.screens.ActualizarProductoRequest
 import retrofit2.http.GET
 import retrofit2.http.Header
 import retrofit2.http.Body
@@ -8,6 +9,9 @@ import okhttp3.RequestBody
 import retrofit2.http.Multipart
 import retrofit2.http.Part
 import retrofit2.http.Path
+import retrofit2.Response
+import retrofit2.http.PUT
+import retrofit2.http.DELETE
 
 data class LoginRequest(
     val email: String,
@@ -120,4 +124,35 @@ interface ApiService {
         @Part imagen: MultipartBody.Part,
         @Part("es_principal") esPrincipal: RequestBody
     ): SubirImagenResponse
+
+    @PUT("api/productos/{producto}")
+    suspend fun actualizarProducto(
+        @Header("Authorization") authorization: String,
+        @Path("producto") productoId: Int,
+        @Body datos: ActualizarProductoRequest
+    ): Response<Producto>
+
+    @DELETE("api/productos/{producto}")
+    suspend fun eliminarProducto(
+        @Header("Authorization") authorization: String,
+        @Path("producto") productoId: Int
+    ): Response<Unit>
+
+    @Multipart
+    @POST("api/productos/{producto}/imagenes/{imagen}")
+    suspend fun actualizarImagenProducto(
+        @Header("Authorization") authorization: String,
+        @Path("producto") productoId: Int,
+        @Path("imagen") imagenId: Int,
+        @Part imagen: MultipartBody.Part?,
+        @Part("es_principal") esPrincipal: RequestBody,
+        @Part("orden") orden: RequestBody
+    ): Response<Unit>
+
+    @DELETE("api/productos/{producto}/imagenes/{imagen}")
+    suspend fun eliminarImagenProducto(
+        @Header("Authorization") authorization: String,
+        @Path("producto") productoId: Int,
+        @Path("imagen") imagenId: Int
+    ): Response<Unit>
 }

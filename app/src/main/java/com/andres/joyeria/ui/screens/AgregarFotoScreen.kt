@@ -1,3 +1,4 @@
+
 package com.andres.joyeria.ui.screens
 
 import android.content.Context
@@ -13,9 +14,9 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import com.andres.joyeria.data.api.RetrofitClient
 import kotlinx.coroutines.launch
-import okhttp3.MediaType
+import okhttp3.MediaType.Companion.toMediaType
 import okhttp3.MultipartBody
-import okhttp3.RequestBody
+import okhttp3.RequestBody.Companion.toRequestBody
 
 @Composable
 fun AgregarFotoScreen(
@@ -25,7 +26,6 @@ fun AgregarFotoScreen(
     onVolver: () -> Unit,
     onImagenSubida: () -> Unit
 ) {
-
     val context = LocalContext.current
     val scope = rememberCoroutineScope()
 
@@ -48,7 +48,6 @@ fun AgregarFotoScreen(
     val selectorImagen = rememberLauncherForActivityResult(
         contract = ActivityResultContracts.GetContent()
     ) { uri ->
-
         imagenUri = uri
         mensaje = ""
     }
@@ -58,7 +57,6 @@ fun AgregarFotoScreen(
             .fillMaxSize()
             .padding(24.dp)
     ) {
-
         Spacer(modifier = Modifier.height(30.dp))
 
         Text(
@@ -96,9 +94,7 @@ fun AgregarFotoScreen(
         }
 
         if (imagenUri != null) {
-
             Spacer(modifier = Modifier.height(12.dp))
-
             Text("Imagen seleccionada correctamente.")
         }
 
@@ -108,7 +104,6 @@ fun AgregarFotoScreen(
             modifier = Modifier.fillMaxWidth(),
             horizontalArrangement = Arrangement.SpaceBetween
         ) {
-
             Text("Imagen principal")
 
             Switch(
@@ -123,7 +118,6 @@ fun AgregarFotoScreen(
 
         Button(
             onClick = {
-
                 val uri = imagenUri
 
                 if (uri == null) {
@@ -135,9 +129,7 @@ fun AgregarFotoScreen(
                 mensaje = ""
 
                 scope.launch {
-
                     try {
-
                         val bytes = context.contentResolver
                             .openInputStream(uri)
                             ?.use {
@@ -146,7 +138,6 @@ fun AgregarFotoScreen(
 
                         if (bytes == null) {
                             mensaje = "No se pudo leer la imagen."
-                            subiendo = false
                             return@launch
                         }
 
@@ -154,15 +145,12 @@ fun AgregarFotoScreen(
                             context.contentResolver.getType(uri)
                                 ?: "image/jpeg"
 
-                        val mediaType =
-                            MediaType.parse(mimeType)
+                        // Convertir la imagen a RequestBody
+                        val requestBody = bytes.toRequestBody(
+                            mimeType.toMediaType()
+                        )
 
-                        val requestBody =
-                            RequestBody.create(
-                                mediaType,
-                                bytes
-                            )
-
+                        // Preparar la fotografía para Laravel
                         val imagenPart =
                             MultipartBody.Part.createFormData(
                                 "imagen",
@@ -173,15 +161,16 @@ fun AgregarFotoScreen(
                                 requestBody
                             )
 
+                        // Indicar si es imagen principal
                         val principalBody =
                             if (esPrincipal) "1" else "0"
 
                         val principalRequest =
-                            RequestBody.create(
-                                MediaType.parse("text/plain"),
-                                principalBody
+                            principalBody.toRequestBody(
+                                "text/plain".toMediaType()
                             )
 
+                        // Enviar fotografía a Laravel
                         RetrofitClient.api.subirImagenProducto(
                             authorization = "Bearer $token",
                             productoId = productoId,
@@ -192,33 +181,23 @@ fun AgregarFotoScreen(
                         onImagenSubida()
 
                     } catch (e: Exception) {
-
-                        mensaje =
-                            "Error al subir: ${e.message}"
-
+                        mensaje = "Error al subir: ${e.message}"
                         e.printStackTrace()
 
                     } finally {
-
                         subiendo = false
                     }
                 }
             },
-
             enabled = !subiendo,
-
             modifier = Modifier.fillMaxWidth()
         ) {
-
             if (subiendo) {
-
                 CircularProgressIndicator(
                     modifier = Modifier.size(20.dp),
                     strokeWidth = 2.dp
                 )
-
             } else {
-
                 Text("Subir fotografía")
             }
         }
@@ -233,9 +212,7 @@ fun AgregarFotoScreen(
         }
 
         if (mensaje.isNotBlank()) {
-
             Spacer(modifier = Modifier.height(12.dp))
-
             Text(mensaje)
         }
     }
@@ -245,7 +222,6 @@ private fun obtenerNombreArchivo(
     context: Context,
     uri: Uri
 ): String {
-
     var nombre = "imagen.jpg"
 
     val cursor = context.contentResolver.query(
@@ -257,14 +233,13 @@ private fun obtenerNombreArchivo(
     )
 
     cursor?.use {
-
-        val indice =
-            it.getColumnIndex(
-                OpenableColumns.DISPLAY_NAME
-            )
+        val indice = it.getColumnIndex(
+            OpenableColumns.DISPLAY_NAME
+        )
 
         if (indice >= 0 && it.moveToFirst()) {
             nombre = it.getString(indice)
+                ?: "imagen.jpg"
         }
     }
 
