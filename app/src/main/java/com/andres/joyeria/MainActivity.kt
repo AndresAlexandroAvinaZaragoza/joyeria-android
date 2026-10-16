@@ -17,7 +17,9 @@ import com.andres.joyeria.ui.screens.EditarProductoScreen
 import com.andres.joyeria.ui.screens.AdministrarImagenesScreen
 
 import com.andres.joyeria.ui.theme.JoyeriaAppTheme
-
+import com.andres.joyeria.ui.screens.PedidosScreen
+import com.andres.joyeria.ui.screens.DetallePedidoScreen
+import com.andres.joyeria.ui.screens.EnviosScreen
 class MainActivity : ComponentActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -45,6 +47,9 @@ class MainActivity : ComponentActivity() {
 
                 var productoSeleccionado by remember {
                     mutableStateOf<Producto?>(null)
+                }
+                var pedidoSeleccionadoId by remember {
+                    mutableStateOf<Int?>(null)
                 }
 
                 // ==========================================
@@ -80,12 +85,20 @@ class MainActivity : ComponentActivity() {
                                 pantalla = "productos"
                             },
 
+                            onPedidosClick = {
+                                pantalla = "pedidos"
+                            },
+                            onEnviosClick = {
+                                pantalla = "envios"
+                            },
                             onCerrarSesion = {
                                 token = null
                                 nombre = ""
                                 productoSeleccionado = null
                                 pantalla = "home"
-                            }
+                            },
+
+
                         )
 
                         // ======================================
@@ -208,6 +221,38 @@ class MainActivity : ComponentActivity() {
                                 }
                             )
                         }
+                    }else if (pantalla == "pedidos") {
+
+                        PedidosScreen(
+                            token = token!!,
+                            onVolver = {
+                                pantalla = "home"
+                            },
+                            onVerDetalle = { pedido ->
+                                pedidoSeleccionadoId = pedido.id_pedidos
+                                pantalla = "detalle_pedido"
+                            }
+                        )
+
+                    } else if (pantalla == "detalle_pedido") {
+
+                        pedidoSeleccionadoId?.let { pedidoId ->
+                            DetallePedidoScreen(
+                                token = token!!,
+                                pedidoId = pedidoId,
+                                onVolver = {
+                                    pantalla = "pedidos"
+                                }
+                            )
+                        }
+                    } else if (pantalla == "envios") {
+
+                        EnviosScreen(
+                            token = token!!,
+                            onVolver = {
+                                pantalla = "home"
+                            }
+                        )
                     }
                 }
             }

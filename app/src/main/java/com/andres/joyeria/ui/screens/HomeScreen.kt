@@ -1,9 +1,9 @@
+
 package com.andres.joyeria.ui.screens
 
 import androidx.compose.foundation.layout.*
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 
@@ -12,7 +12,9 @@ fun HomeScreen(
     nombre: String,
     onProductosClick: () -> Unit,
     onFotografiasClick: () -> Unit,
-    onCerrarSesion: () -> Unit
+    onPedidosClick: () -> Unit,
+    onCerrarSesion: () -> Unit,
+    onEnviosClick: () -> Unit
 ) {
     Column(
         modifier = Modifier
@@ -20,10 +22,25 @@ fun HomeScreen(
             .padding(24.dp)
     ) {
 
-        Text("Joyería")
-        Text("Hola, $nombre")
+        Spacer(modifier = Modifier.height(30.dp))
+
+        Text(
+            text = "Joyería",
+            style = MaterialTheme.typography.headlineMedium
+        )
+
+        Spacer(modifier = Modifier.height(8.dp))
+
+        Text(
+            text = "Hola, $nombre",
+            style = MaterialTheme.typography.titleMedium
+        )
 
         Spacer(modifier = Modifier.height(32.dp))
+
+        // =====================================
+        // PRODUCTOS
+        // =====================================
 
         Button(
             onClick = onProductosClick,
@@ -34,6 +51,10 @@ fun HomeScreen(
 
         Spacer(modifier = Modifier.height(16.dp))
 
+        // =====================================
+        // FOTOGRAFÍAS
+        // =====================================
+
         Button(
             onClick = onFotografiasClick,
             modifier = Modifier.fillMaxWidth()
@@ -43,15 +64,31 @@ fun HomeScreen(
 
         Spacer(modifier = Modifier.height(16.dp))
 
+        // =====================================
+        // PEDIDOS
+        // =====================================
+
         Button(
-            onClick = { },
-            enabled = false,
+            onClick = onPedidosClick,
             modifier = Modifier.fillMaxWidth()
         ) {
-            Text("🧾 Pedidos - Próximamente")
+            Text("🧾 Pedidos")
+        }
+
+        Spacer(modifier = Modifier.height(16.dp))
+
+        Button(
+            onClick = onEnviosClick,
+            modifier = Modifier.fillMaxWidth()
+        ) {
+            Text("🚚 Envíos")
         }
 
         Spacer(modifier = Modifier.weight(1f))
+
+        // =====================================
+        // CERRAR SESIÓN
+        // =====================================
 
         OutlinedButton(
             onClick = onCerrarSesion,
@@ -59,6 +96,5 @@ fun HomeScreen(
         ) {
             Text("Cerrar sesión")
         }
-
     }
 }

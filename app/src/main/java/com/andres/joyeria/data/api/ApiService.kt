@@ -12,6 +12,7 @@ import retrofit2.http.Path
 import retrofit2.Response
 import retrofit2.http.PUT
 import retrofit2.http.DELETE
+import retrofit2.http.PATCH
 
 data class LoginRequest(
     val email: String,
@@ -155,4 +156,33 @@ interface ApiService {
         @Path("producto") productoId: Int,
         @Path("imagen") imagenId: Int
     ): Response<Unit>
+
+    @GET("api/pedidos")
+    suspend fun obtenerPedidos(
+        @Header("Authorization") authorization: String
+    ): PedidosResponse
+
+    @GET("api/pedidos/{pedido}")
+    suspend fun obtenerDetallePedido(
+        @Header("Authorization") authorization: String,
+        @Path("pedido") pedidoId: Int
+    ): PedidoResponse
+
+    @GET("api/envios")
+    suspend fun obtenerEnvios(
+        @Header("Authorization") authorization: String
+    ): EnviosResponse
+
+    @GET("api/envios/{envio}")
+    suspend fun obtenerEnvio(
+        @Header("Authorization") authorization: String,
+        @Path("envio") envioId: Int
+    ): EnvioResponse
+
+    @PATCH("api/envios/{envio}")
+    suspend fun actualizarEnvio(
+        @Header("Authorization") authorization: String,
+        @Path("envio") envioId: Int,
+        @Body request: ActualizarEnvioRequest
+    ): retrofit2.Response<EnvioResponse>
 }
