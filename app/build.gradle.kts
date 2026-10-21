@@ -37,6 +37,8 @@ android {
 }
 
 dependencies {
+    // Añade esta línea para los iconos ArrowForward, Visibility, VisibilityOff:
+    implementation("androidx.compose.material:material-icons-extended")
     //imagenes
     implementation("io.coil-kt.coil3:coil-compose:3.3.0")
     implementation("io.coil-kt.coil3:coil-network-okhttp:3.3.0")

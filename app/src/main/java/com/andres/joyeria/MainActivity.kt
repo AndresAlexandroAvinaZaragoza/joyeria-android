@@ -16,6 +16,7 @@ import com.andres.joyeria.ui.screens.AgregarFotoScreen
 import com.andres.joyeria.ui.screens.EditarProductoScreen
 import com.andres.joyeria.ui.screens.AdministrarImagenesScreen
 
+import com.andres.joyeria.ui.screens.DetalleProductoScreen
 import com.andres.joyeria.ui.theme.JoyeriaAppTheme
 import com.andres.joyeria.ui.screens.PedidosScreen
 import com.andres.joyeria.ui.screens.DetallePedidoScreen
@@ -131,8 +132,58 @@ class MainActivity : ComponentActivity() {
                             onAdministrarImagenes = { producto ->
                                 productoSeleccionado = producto
                                 pantalla = "administrar_imagenes"
+                            },
+
+                            onVerDetalle = { producto ->
+                                productoSeleccionado = producto
+                                pantalla = "detalle_producto"
+                            },
+
+                            onNavigateTab = { destino ->
+                                if (destino == "home") pantalla = "home"
+                                else pantalla = destino
                             }
                         )
+
+                        // ======================================
+                        // DETALLE DE PRODUCTO
+                        // ======================================
+
+                    } else if (pantalla == "detalle_producto") {
+
+                        val producto = productoSeleccionado
+
+                        if (producto != null) {
+
+                            DetalleProductoScreen(
+                                token = token!!,
+                                producto = producto,
+
+                                onVolver = {
+                                    pantalla = "productos"
+                                },
+
+                                onEditarProducto = { prod ->
+                                    productoSeleccionado = prod
+                                    pantalla = "editar_producto"
+                                },
+
+                                onAgregarFoto = { prod ->
+                                    productoSeleccionado = prod
+                                    pantalla = "agregar_foto"
+                                },
+
+                                onAdministrarImagenes = { prod ->
+                                    productoSeleccionado = prod
+                                    pantalla = "administrar_imagenes"
+                                },
+
+                                onProductoEliminado = {
+                                    productoSeleccionado = null
+                                    pantalla = "productos"
+                                }
+                            )
+                        }
 
                         // ======================================
                         // AGREGAR PRODUCTO
