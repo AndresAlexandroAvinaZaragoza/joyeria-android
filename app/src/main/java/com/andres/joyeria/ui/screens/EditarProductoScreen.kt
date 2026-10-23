@@ -316,11 +316,19 @@ fun EditarProductoScreen(
                 }
             }
 
-            Text(
-                text = "Este producto no tiene inventario registrado.",
-                style = MaterialTheme.typography.bodySmall,
-                color = JoyeriaGris
-            )
+            if (producto.inventario == null) {
+                Text(
+                    text = "Este producto no tiene inventario registrado.",
+                    style = MaterialTheme.typography.bodySmall,
+                    color = JoyeriaGris
+                )
+            } else {
+                Text(
+                    text = "Inventario registrado en el sistema.",
+                    style = MaterialTheme.typography.bodySmall,
+                    color = JoyeriaDorado
+                )
+            }
 
             Spacer(modifier = Modifier.height(12.dp))
 

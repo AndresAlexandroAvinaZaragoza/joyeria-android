@@ -39,7 +39,8 @@ fun DetalleProductoScreen(
     onEditarProducto: (Producto) -> Unit,
     onAgregarFoto: (Producto) -> Unit,
     onAdministrarImagenes: (Producto) -> Unit,
-    onProductoEliminado: () -> Unit
+    onProductoEliminado: () -> Unit,
+    onVerInventario: () -> Unit = {}
 ) {
     val snackbarHostState = remember { SnackbarHostState() }
     val scope = rememberCoroutineScope()
@@ -363,7 +364,7 @@ fun DetalleProductoScreen(
             Surface(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .clickable { },
+                    .clickable { onVerInventario() },
                 shape = RoundedCornerShape(12.dp),
                 color = JoyeriaBlancoCampo,
                 border = BorderStroke(1.dp, JoyeriaBorde)

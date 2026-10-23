@@ -42,7 +42,29 @@ data class Inventario(
     val id_inventario: Int,
     val stock_actual: Int,
     val stock_minimo: Int,
-    val producto_id: Int
+    val producto_id: Int,
+    val producto: Producto? = null
+)
+
+data class InventarioResponse(
+    val message: String,
+    val inventarios: List<Inventario>
+)
+
+data class InventarioDetalleResponse(
+    val message: String,
+    val inventario: Inventario
+)
+
+data class CrearInventarioRequest(
+    val producto_id: Int,
+    val cantidad: Int,
+    val stock_minimo: Int? = null
+)
+
+data class ActualizarInventarioRequest(
+    val stock_actual: Int,
+    val stock_minimo: Int? = null
 )
 
 data class ProductoImagen(
@@ -156,6 +178,30 @@ interface ApiService {
         @Path("producto") productoId: Int,
         @Path("imagen") imagenId: Int
     ): Response<Unit>
+
+    @GET("api/inventario")
+    suspend fun obtenerInventario(
+        @Header("Authorization") authorization: String
+    ): InventarioResponse
+
+    @GET("api/inventario/{inventario}")
+    suspend fun obtenerDetalleInventario(
+        @Header("Authorization") authorization: String,
+        @Path("inventario") inventarioId: Int
+    ): InventarioDetalleResponse
+
+    @POST("api/inventario")
+    suspend fun crearInventario(
+        @Header("Authorization") authorization: String,
+        @Body request: CrearInventarioRequest
+    ): InventarioDetalleResponse
+
+    @PUT("api/inventario/{inventario}")
+    suspend fun actualizarInventario(
+        @Header("Authorization") authorization: String,
+        @Path("inventario") inventarioId: Int,
+        @Body request: ActualizarInventarioRequest
+    ): InventarioDetalleResponse
 
     @GET("api/pedidos")
     suspend fun obtenerPedidos(

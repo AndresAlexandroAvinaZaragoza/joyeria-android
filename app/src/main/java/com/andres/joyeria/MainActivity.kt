@@ -17,6 +17,7 @@ import com.andres.joyeria.ui.screens.EditarProductoScreen
 import com.andres.joyeria.ui.screens.AdministrarImagenesScreen
 
 import com.andres.joyeria.ui.screens.DetalleProductoScreen
+import com.andres.joyeria.ui.screens.InventarioScreen
 import com.andres.joyeria.ui.theme.JoyeriaAppTheme
 import com.andres.joyeria.ui.screens.PedidosScreen
 import com.andres.joyeria.ui.screens.DetallePedidoScreen
@@ -181,9 +182,30 @@ class MainActivity : ComponentActivity() {
                                 onProductoEliminado = {
                                     productoSeleccionado = null
                                     pantalla = "productos"
+                                },
+
+                                onVerInventario = {
+                                    pantalla = "inventario"
                                 }
                             )
                         }
+
+                        // ======================================
+                        // GESTIÓN DE INVENTARIO (NUEVO)
+                        // ======================================
+
+                    } else if (pantalla == "inventario") {
+
+                        InventarioScreen(
+                            token = token!!,
+                            onVolver = {
+                                pantalla = if (productoSeleccionado != null) "detalle_producto" else "productos"
+                            },
+                            onNavigateTab = { destino ->
+                                if (destino == "home") pantalla = "home"
+                                else pantalla = destino
+                            }
+                        )
 
                         // ======================================
                         // AGREGAR PRODUCTO
